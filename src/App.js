@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import './App.css';
 import Board from './Board.js'
 
 function App() {
   const[square,setSquare] = useState(Array(9).fill(null))
   const[isCurrentPlayerX, setNextPlayer] = useState(true);
+  const turns = useRef(0);
 
    const isWinner = () =>{
     const wins = [
@@ -36,6 +37,7 @@ function App() {
       return;
     copy[sqNo] = isCurrentPlayerX ? "X" : "O";
     setSquare(copy);
+    turns.current = turns.current + 1;
     setNextPlayer(!isCurrentPlayerX);
   }
 
@@ -43,8 +45,9 @@ function App() {
     <div className="App">
       <h2>Tic Tac Toe Game</h2>
       <Board squares={square} onClick= {onClick}/>
-      <h2>{winner ? `Yay!! the winner is ${winner}`: ""}</h2>
-      <button className="NewGame" onClick = {()=>setSquare(Array(9).fill(null))}>New Game ?</button>
+      <h2>{winner ? `Yay!! the winner is ${winner}`:(turns.current === 9 ? "It's a Draw" : "") }</h2>
+      <button className="NewGame" onClick = {()=>{setSquare(Array(9).fill(null))
+      turns.current=0}}>New Game ?</button>
     </div>
   );
 }
